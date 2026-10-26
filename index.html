@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https: data:; connect-src https: http:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>SubPipe</title>
+  <meta name="description" content="SubPipe — subscription manager for NewPipe">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<main class="t-page">
+  <header class="m-brand">
+    <img class="m-brand__logo" src="img/favicon.svg" alt="" width="36" height="36">
+    <div>
+      <h1>SubPipe</h1>
+      <p class="a-text--tagline">Subscription manager for NewPipe</p>
+    </div>
+  </header>
+  <p class="a-text--lead">Load a NewPipe export, edit it, and download a file NewPipe can import again.<br>
+    Subscriptions → ⋮ → Import from → Previous export</p>
+
+  <div class="o-card o-dropzone" id="drop">
+    <div class="m-row m-row--center">
+      <span>Drop a NewPipe <code>.json</code> export here, or</span>
+      <label class="a-button">Open file<input type="file" id="openFile" accept=".json,application/json" hidden></label>
+      <label class="a-button" title="Add channels from another export without removing current ones">Merge file<input type="file" id="mergeFile" accept=".json,application/json" hidden></label>
+    </div>
+  </div>
+
+
+  <div class="o-card">
+    <div class="m-row">
+      <input class="a-input" type="search" id="lookup" placeholder="Search YouTube channels, or paste a channel URL / @handle / UC… ID" autocomplete="off">
+    </div>
+    <p class="a-text--meta" id="lookupStatus" role="status"></p>
+    <ul class="o-results" id="results"></ul>
+    <details class="m-disclosure">
+      <summary class="m-disclosure__summary">Add manually (if search is unavailable)</summary>
+      <form class="m-row" id="addForm">
+        <input class="a-input" type="text" id="addUrl" placeholder="Channel URL, @handle or UC… channel ID" required>
+        <input class="a-input" type="text" id="addName" placeholder="Channel name" required>
+        <button class="a-button a-button--primary" type="submit">Add</button>
+      </form>
+    </details>
+    <details class="m-disclosure">
+      <summary class="m-disclosure__summary">Search servers (Invidious / Piped)</summary>
+      <textarea class="a-textarea" id="servers" spellcheck="false" aria-label="Server URLs, one per line"></textarea>
+      <div class="m-row">
+        <span>One URL per line, tried in order. Hosts containing “piped” use the Piped API, the rest the Invidious API.</span>
+        <button class="a-button" type="button" id="saveServers">Save</button>
+        <button class="a-button" type="button" id="resetServers">Reset</button>
+      </div>
+      <p class="m-disclosure__hint">More servers:
+        <a href="https://api.invidious.io/" target="_blank" rel="noopener noreferrer">Invidious instances</a>
+        (pick ones with <em>API</em> and <em>CORS</em> enabled) ·
+        <a href="https://github.com/TeamPiped/documentation/blob/main/content/docs/public-instances/index.md" target="_blank" rel="noopener noreferrer">Piped instances</a>
+        (use the <em>API URL</em> column).</p>
+    </details>
+  </div>
+
+  <div class="o-card">
+    <div class="m-row m-row--toolbar">
+      <input class="a-input" type="search" id="filter" placeholder="Search…">
+      <button class="a-button" type="button" id="sortBtn">Sort A–Z</button>
+      <button class="a-button" type="button" id="clearBtn">Clear all</button>
+      <button class="a-button a-button--primary" type="button" id="exportBtn">Export JSON</button>
+    </div>
+    <div class="m-row"><span class="a-text--count" id="count"></span></div>
+    <ul class="o-list" id="list"></ul>
+  </div>
+</main>
+
+<div class="o-toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script src="js/core.js"></script>
+<script src="js/channels.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Subscription exports (personal data)
+newpipe_subscriptions_*.json
+*subscriptions*.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs and temp files
+*.log
+*.tmp
+.cache/

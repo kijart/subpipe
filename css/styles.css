@@ -1,0 +1,400 @@
+/* Atomic Design: tokens → base → atoms (a-) → molecules (m-) → organisms (o-) → templates (t-). */
+
+/* ==== Tokens ==== */
+
+:root {
+  --bg: #f6f6f4;
+  --surface: #fff;
+  --text: #1d1d1b;
+  --muted: #6b6b66;
+  --border: #e2e2dc;
+  --accent: #c4302b;
+  --accent-text: #fff;
+  --danger: #b42318;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161615;
+    --surface: #1f1f1d;
+    --text: #ececea;
+    --muted: #9a9a94;
+    --border: #34342f;
+    --accent: #e5534b;
+    --accent-text: #fff;
+    --danger: #f97066;
+  }
+}
+
+/* ==== Base ==== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+h1 {
+  font-size: 1.4rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* ==== Atoms ==== */
+
+/* Text */
+
+.a-text--tagline {
+  margin: 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.a-text--lead {
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+.a-text--meta {
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.a-text--count {
+  color: var(--muted);
+  font-size: .9rem;
+  margin-left: auto;
+}
+
+/* Fields */
+
+.a-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+.a-input--inline {
+  width: 100%;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 5px;
+}
+
+.a-input--inline:hover,
+.a-input--inline:focus {
+  border-color: var(--border);
+  background: var(--bg);
+}
+
+.a-textarea {
+  width: 100%;
+  min-height: 64px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  font: .85rem/1.4 ui-monospace, monospace;
+}
+
+/* Buttons */
+
+.a-button {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.a-button--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+.a-button--danger {
+  border: 0;
+  background: transparent;
+  color: var(--danger);
+  font-size: 1.1rem;
+  padding: 4px 8px;
+}
+
+.a-button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+/* Media, labels and links */
+
+.a-avatar {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--border);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.a-badge {
+  font-size: .72rem;
+  padding: 2px 6px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.a-link--muted {
+  display: block;
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: .82rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==== Molecules ==== */
+
+/* Row: inline group of fields and buttons. */
+
+.m-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.m-row--center {
+  justify-content: center;
+}
+
+.m-row--toolbar {
+  margin-bottom: 8px;
+}
+
+/* Brand: logo, title and tagline. */
+
+.m-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.m-brand__logo {
+  flex: none;
+}
+
+/* Item: avatar, info and actions; used by search results and subscriptions. */
+
+.m-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.m-item:last-child {
+  border-bottom: 0;
+}
+
+.m-item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.m-item__title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.m-item--empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* Disclosure: collapsible panel with a hint. */
+
+.m-disclosure {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.m-disclosure>.m-row,
+.m-disclosure>.a-textarea {
+  margin-top: 8px;
+}
+
+.m-disclosure__summary {
+  cursor: pointer;
+}
+
+.m-disclosure__hint {
+  margin: 8px 0 0;
+}
+
+.m-disclosure__hint a {
+  color: var(--accent);
+}
+
+/* Toast */
+
+.m-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--text);
+  color: var(--bg);
+  border-left: 4px solid #3fb950;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+  font-size: .93rem;
+  pointer-events: auto;
+  animation: toast-in .2s ease-out;
+  transition: opacity .3s, transform .3s;
+}
+
+.m-toast--error {
+  border-left-color: var(--danger);
+}
+
+.m-toast--leaving {
+  opacity: 0;
+  transform: translateX(16px);
+}
+
+.m-toast__message {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.m-toast__close {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0 2px;
+  opacity: .7;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.m-toast__close:hover {
+  opacity: 1;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-toast {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ==== Organisms ==== */
+
+/* Card: panel holding a section of the app. */
+
+.o-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+/* Dropzone: card that accepts an export file. */
+
+.o-dropzone {
+  border-style: dashed;
+  text-align: center;
+  color: var(--muted);
+}
+
+.o-dropzone--over {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* Lists: search results and subscriptions. */
+
+.o-results,
+.o-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.o-results {
+  margin-top: 8px;
+}
+
+.o-results:empty {
+  display: none;
+}
+
+/* Toast stack */
+
+.o-toasts {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(360px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+@media (max-width: 520px) {
+  .o-toasts {
+    top: auto;
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+/* ==== Templates ==== */
+
+.t-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
