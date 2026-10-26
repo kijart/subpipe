@@ -11,10 +11,12 @@
   --accent: #c4302b;
   --accent-text: #fff;
   --danger: #b42318;
+  color-scheme: light;
 }
 
+/* Dark follows the system unless the user picked a theme (data-theme on <html>, set by theme.js). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #161615;
     --surface: #1f1f1d;
     --text: #ececea;
@@ -23,7 +25,20 @@
     --accent: #e5534b;
     --accent-text: #fff;
     --danger: #f97066;
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #161615;
+  --surface: #1f1f1d;
+  --text: #ececea;
+  --muted: #9a9a94;
+  --border: #34342f;
+  --accent: #e5534b;
+  --accent-text: #fff;
+  --danger: #f97066;
+  color-scheme: dark;
 }
 
 /* ==== Base ==== */
@@ -208,6 +223,10 @@ h1 {
 
 .m-brand__logo {
   flex: none;
+}
+
+.m-brand__theme {
+  margin-left: auto;
 }
 
 /* Item: avatar, info and actions; used by search results and subscriptions. */

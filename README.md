@@ -12,6 +12,7 @@ Load a NewPipe subscriptions export, edit it — add, rename, remove, merge, sor
 - **Add manually** when search is unavailable.
 - **Rename, remove, filter and sort A–Z** your subscriptions.
 - **Channel avatars** fetched on demand and cached in your browser.
+- **Light, dark or automatic theme**, remembered in your browser.
 - **Export JSON** in the same format NewPipe writes (`newpipe_subscriptions_YYYYMMDDHHMM.json`).
 
 ## Usage
@@ -47,7 +48,7 @@ Public instances come and go. If search fails, try other servers or use **Add ma
 ## Privacy
 
 - Everything runs in your browser. Your subscription file is never uploaded anywhere.
-- The current list, the server list and cached avatars are kept in your browser's `localStorage`.
+- The current list, the server list, cached avatars and the theme choice are kept in your browser's `localStorage`.
 - Search queries and channel lookups are sent to the Invidious / Piped servers you configure.
 
 ## Export format
@@ -75,6 +76,7 @@ js/core.js              NewPipe export parsing and writing, YouTube URL normaliz
                         duplicate detection, merge and sort (no DOM)
 js/channels.js          Invidious / Piped client: channel search and lookup, server
                         fallback, response normalization (no DOM)
+js/theme.js             Light / dark / auto theme toggle, applied before first paint
 js/app.js               UI: rendering, file open/merge/export, search, avatars, toasts
                         and localStorage persistence
 img/favicon.svg         Icon
