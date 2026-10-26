@@ -391,6 +391,23 @@ h1 {
   }
 }
 
+/* Footer */
+
+.o-footer {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: .85rem;
+}
+
+.o-footer a {
+  color: inherit;
+}
+
+.o-footer a:hover {
+  color: var(--accent);
+}
+
 /* ==== Templates ==== */
 
 .t-page {
