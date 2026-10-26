@@ -32,7 +32,10 @@
 
   <div class="o-card">
     <div class="m-row">
-      <input class="a-input" type="search" id="lookup" placeholder="Search YouTube channels, or paste a channel URL / @handle / UC… ID" autocomplete="off">
+      <div class="m-search">
+        <input class="a-input m-search__input" type="search" id="lookup" placeholder="Search YouTube channels, or paste a channel URL / @handle / UC… ID" autocomplete="off">
+        <button class="m-search__clear" type="button" aria-label="Clear search">✕</button>
+      </div>
     </div>
     <p class="a-text--meta" id="lookupStatus" role="status"></p>
     <ul class="o-results" id="results"></ul>
@@ -62,7 +65,10 @@
 
   <div class="o-card">
     <div class="m-row m-row--toolbar">
-      <input class="a-input" type="search" id="filter" placeholder="Search…">
+      <div class="m-search">
+        <input class="a-input m-search__input" type="search" id="filter" placeholder="Search…">
+        <button class="m-search__clear" type="button" aria-label="Clear search">✕</button>
+      </div>
       <button class="a-button" type="button" id="sortBtn">Sort A–Z</button>
       <button class="a-button" type="button" id="clearBtn">Clear all</button>
       <button class="a-button a-button--primary" type="button" id="exportBtn">Export JSON</button>

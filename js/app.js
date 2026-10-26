@@ -308,6 +308,15 @@ $("resetServers").addEventListener("click", () => {
   say("Servers reset to defaults.");
 });
 
+for (const btn of document.querySelectorAll(".m-search__clear")) {
+  btn.addEventListener("click", () => {
+    const input = btn.previousElementSibling;
+    input.value = "";
+    input.dispatchEvent(new Event("input"));
+    input.focus();
+  });
+}
+
 $("filter").addEventListener("input", render);
 $("sortBtn").addEventListener("click", () => { state.subscriptions = C.sortByName(state.subscriptions); save(); render(); });
 $("clearBtn").addEventListener("click", () => {
