@@ -8,7 +8,9 @@
   }
 
   function absolute(url) {
-    if (!url) return "";
+    if (!url) {
+      return "";
+    }
     return url.startsWith("//") ? `https:${url}` : url;
   }
 
@@ -18,7 +20,9 @@
     try {
       const u = new URL(absolute(url));
       const host = u.searchParams.get("host");
-      if (!host || !/googleusercontent\.com$/.test(host)) return u.href;
+      if (!host || !/googleusercontent\.com$/.test(host)) {
+        return u.href;
+      }
       u.searchParams.delete("host");
       return `https://${host}${u.pathname}${u.search}`;
     } catch {
@@ -27,7 +31,9 @@
   }
 
   function pickThumbnail(thumbs) {
-    if (!Array.isArray(thumbs) || !thumbs.length) return "";
+    if (!Array.isArray(thumbs) || !thumbs.length) {
+      return "";
+    }
     const sorted = thumbs.slice().sort((a, b) => a.width - b.width);
     return absolute((sorted.find((t) => t.width >= 64) || sorted[sorted.length - 1]).url);
   }
@@ -73,14 +79,20 @@
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
     const onAbort = () => ctrl.abort();
-    if (signal) signal.addEventListener("abort", onAbort);
+    if (signal) {
+      signal.addEventListener("abort", onAbort);
+    }
     try {
       const res = await fetch(url, { signal: ctrl.signal });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
       return await res.json();
     } finally {
       clearTimeout(timer);
-      if (signal) signal.removeEventListener("abort", onAbort);
+      if (signal) {
+        signal.removeEventListener("abort", onAbort);
+      }
     }
   }
 
@@ -98,7 +110,9 @@
           preferred = i;
           return result;
         } catch (e) {
-          if (signal && signal.aborted) throw e;
+          if (signal && signal.aborted) {
+            throw e;
+          }
           errors.push(`${base}: ${e.message}`);
         }
       }
@@ -132,6 +146,9 @@
     fromPipedSearch,
     createClient,
   };
-  if (typeof module !== "undefined" && module.exports) module.exports = api;
-  else root.NPChannels = api;
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  } else {
+    root.NPChannels = api;
+  }
 })(this);

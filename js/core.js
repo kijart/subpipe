@@ -6,9 +6,15 @@
   // Returns the canonical https://www.youtube.com/... form NewPipe stores, or null.
   function normalizeYouTubeUrl(input) {
     const value = String(input || "").trim();
-    if (!value) return null;
-    if (CHANNEL_ID.test(value)) return `https://www.youtube.com/channel/${value}`;
-    if (/^@[\w.-]+$/.test(value)) return `https://www.youtube.com/${value}`;
+    if (!value) {
+      return null;
+    }
+    if (CHANNEL_ID.test(value)) {
+      return `https://www.youtube.com/channel/${value}`;
+    }
+    if (/^@[\w.-]+$/.test(value)) {
+      return `https://www.youtube.com/${value}`;
+    }
 
     let url;
     try {
@@ -16,7 +22,9 @@
     } catch {
       return null;
     }
-    if (!/(^|\.)youtube\.com$/i.test(url.hostname)) return null;
+    if (!/(^|\.)youtube\.com$/i.test(url.hostname)) {
+      return null;
+    }
 
     const parts = url.pathname.split("/").filter(Boolean);
     if (parts[0] === "channel" && CHANNEL_ID.test(parts[1] || "")) {
@@ -111,6 +119,9 @@
     sortByName,
     exportFileName,
   };
-  if (typeof module !== "undefined" && module.exports) module.exports = api;
-  else root.NPCore = api;
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  } else {
+    root.NPCore = api;
+  }
 })(this);

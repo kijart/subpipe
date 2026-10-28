@@ -15,8 +15,11 @@
   }
 
   function apply(mode) {
-    if (mode === "auto") root.removeAttribute("data-theme");
-    else root.dataset.theme = mode;
+    if (mode === "auto") {
+      root.removeAttribute("data-theme");
+    } else {
+      root.dataset.theme = mode;
+    }
   }
 
   let mode = read();
@@ -30,8 +33,11 @@
       apply(mode);
       btn.textContent = LABELS[mode];
       try {
-        if (mode === "auto") localStorage.removeItem(KEY);
-        else localStorage.setItem(KEY, mode);
+        if (mode === "auto") {
+          localStorage.removeItem(KEY);
+        } else {
+          localStorage.setItem(KEY, mode);
+        }
       } catch {}
     });
   });

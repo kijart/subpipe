@@ -41,7 +41,9 @@ function channelId(url) {
 }
 
 function rememberAvatar(id, url) {
-  if (!id || !url || avatars[id] === url) return;
+  if (!id || !url || avatars[id] === url) {
+    return;
+  }
   avatars[id] = url;
   writeJson(AVATARS_KEY, avatars);
 }
@@ -80,16 +82,24 @@ function avatarFor(name, src) {
   const el = document.createElement("span");
   el.className = "a-avatar";
   el.textContent = (name.trim()[0] || "?").toUpperCase();
-  if (src) queueMicrotask(() => el.isConnected && setAvatar(el, src));
+  if (src) {
+    queueMicrotask(() => el.isConnected && setAvatar(el, src));
+  }
   return el;
 }
 
 const observer = new IntersectionObserver((entries) => {
   for (const entry of entries) {
-    if (!entry.isIntersecting) continue;
+    if (!entry.isIntersecting) {
+      continue;
+    }
     observer.unobserve(entry.target);
     const el = entry.target;
-    fetchAvatar(el.dataset.channel).then((src) => { if (src && el.isConnected) setAvatar(el, src); });
+    fetchAvatar(el.dataset.channel).then((src) => {
+      if (src && el.isConnected) {
+        setAvatar(el, src);
+      }
+    });
   }
 }, { rootMargin: "200px" });
 
@@ -97,7 +107,9 @@ function say(text, isError = false) {
   const box = $("toasts");
   const toast = document.createElement("div");
   toast.className = isError ? "m-toast m-toast--error" : "m-toast";
-  if (isError) toast.setAttribute("role", "alert");
+  if (isError) {
+    toast.setAttribute("role", "alert");
+  }
   const msg = document.createElement("span");
   msg.className = "m-toast__message";
   msg.textContent = text;
@@ -120,7 +132,9 @@ function say(text, isError = false) {
 
   toast.append(msg, close);
   box.append(toast);
-  while (box.children.length > 4) box.firstElementChild.remove();
+  while (box.children.length > 4) {
+    box.firstElementChild.remove();
+  }
   arm();
 }
 
@@ -145,7 +159,9 @@ function render() {
     name.addEventListener("change", () => { s.name = name.value.trim() || s.name; name.value = s.name; save(); });
     const url = document.createElement("a");
     url.className = "a-link--muted";
-    if (C.isWebUrl(s.url)) url.href = s.url;
+    if (C.isWebUrl(s.url)) {
+      url.href = s.url;
+    }
     url.target = "_blank";
     url.rel = "noopener noreferrer";
     url.textContent = s.url;
@@ -183,7 +199,9 @@ async function readFile(file, merge) {
       state.subscriptions = subscriptions;
       say(`Merged ${file.name}: ${added} new, ${parsed.subscriptions.length - added} already present.`);
     } else {
-      if (state.subscriptions.length && !confirm("Replace the current list with this file?")) return;
+      if (state.subscriptions.length && !confirm("Replace the current list with this file?")) {
+        return;
+      }
       state = parsed;
       say(`Loaded ${parsed.subscriptions.length} subscriptions from ${file.name}.`);
     }
@@ -193,24 +211,40 @@ async function readFile(file, merge) {
   }
 }
 
-$("openFile").addEventListener("change", (e) => { if (e.target.files[0]) readFile(e.target.files[0], false); e.target.value = ""; });
-$("mergeFile").addEventListener("change", (e) => { if (e.target.files[0]) readFile(e.target.files[0], true); e.target.value = ""; });
+$("openFile").addEventListener("change", (e) => {
+  if (e.target.files[0]) {
+    readFile(e.target.files[0], false);
+  }
+  e.target.value = "";
+});
+$("mergeFile").addEventListener("change", (e) => {
+  if (e.target.files[0]) {
+    readFile(e.target.files[0], true);
+  }
+  e.target.value = "";
+});
 
 const drop = $("drop");
 drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("o-dropzone--over"); });
 drop.addEventListener("dragleave", () => drop.classList.remove("o-dropzone--over"));
 drop.addEventListener("drop", (e) => {
   e.preventDefault(); drop.classList.remove("o-dropzone--over");
-  if (e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0], false);
+  if (e.dataTransfer.files[0]) {
+    readFile(e.dataTransfer.files[0], false);
+  }
 });
 
 $("addForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const url = C.normalizeYouTubeUrl($("addUrl").value);
   const name = $("addName").value.trim();
-  if (!url) return say("That doesn't look like a YouTube channel URL, @handle or channel ID.", true);
+  if (!url) {
+    return say("That doesn't look like a YouTube channel URL, @handle or channel ID.", true);
+  }
   const dup = C.findDuplicate(state.subscriptions, C.YOUTUBE, url);
-  if (dup) return say(`Already subscribed as “${dup.name}”.`, true);
+  if (dup) {
+    return say(`Already subscribed as “${dup.name}”.`, true);
+  }
   state.subscriptions.push({ service_id: C.YOUTUBE, url, name });
   save(); render();
   $("addForm").reset(); $("addUrl").focus();
@@ -221,14 +255,18 @@ let searchTimer = null;
 let searchCtrl = null;
 
 function formatCount(n) {
-  if (n == null) return "";
+  if (n == null) {
+    return "";
+  }
   return `${new Intl.NumberFormat(undefined, { notation: "compact" }).format(n)} subscribers`;
 }
 
 function addChannel(ch) {
   const url = `https://www.youtube.com/channel/${ch.id}`;
   const dup = C.findDuplicate(state.subscriptions, C.YOUTUBE, url);
-  if (dup) return say(`Already subscribed as “${dup.name}”.`, true);
+  if (dup) {
+    return say(`Already subscribed as “${dup.name}”.`, true);
+  }
   state.subscriptions.push({ service_id: C.YOUTUBE, url, name: ch.name });
   rememberAvatar(ch.id, ch.avatar);
   save(); render();
@@ -262,7 +300,9 @@ function showResults(channels) {
 }
 
 async function runLookup(text) {
-  if (searchCtrl) searchCtrl.abort();
+  if (searchCtrl) {
+    searchCtrl.abort();
+  }
   const query = text.trim();
   if (query.length < 2) { $("results").replaceChildren(); $("lookupStatus").textContent = ""; return; }
   searchCtrl = new AbortController();
@@ -272,13 +312,20 @@ async function runLookup(text) {
     const url = C.normalizeYouTubeUrl(query);
     const id = url && channelId(url);
     let channels;
-    if (id) channels = [await client.channel(id, signal)];
-    else channels = await client.search(url ? url.split("/").pop() : query, signal);
-    if (signal.aborted) return;
+    if (id) {
+      channels = [await client.channel(id, signal)];
+    } else {
+      channels = await client.search(url ? url.split("/").pop() : query, signal);
+    }
+    if (signal.aborted) {
+      return;
+    }
     showResults(channels);
     $("lookupStatus").textContent = channels.length ? "" : "No channels found.";
   } catch (e) {
-    if (signal.aborted) return;
+    if (signal.aborted) {
+      return;
+    }
     $("results").replaceChildren();
     $("lookupStatus").textContent = `Search failed. ${e.message} You can still add channels manually below.`;
   }
@@ -292,7 +339,9 @@ $("lookup").addEventListener("input", (e) => {
 $("servers").value = servers.join("\n");
 $("saveServers").addEventListener("click", () => {
   const valid = validServers($("servers").value.split(/\s+/).filter(Boolean));
-  if (!valid.length) return say("Add at least one valid server URL.", true);
+  if (!valid.length) {
+    return say("Add at least one valid server URL.", true);
+  }
   servers = valid;
   writeJson(SERVERS_KEY, servers);
   client = N.createClient(servers);
@@ -320,7 +369,9 @@ for (const btn of document.querySelectorAll(".m-search__clear")) {
 $("filter").addEventListener("input", render);
 $("sortBtn").addEventListener("click", () => { state.subscriptions = C.sortByName(state.subscriptions); save(); render(); });
 $("clearBtn").addEventListener("click", () => {
-  if (!state.subscriptions.length || !confirm("Remove all subscriptions from this list?")) return;
+  if (!state.subscriptions.length || !confirm("Remove all subscriptions from this list?")) {
+    return;
+  }
   state.subscriptions = []; save(); render(); say("List cleared.");
 });
 $("exportBtn").addEventListener("click", () => {
