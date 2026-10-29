@@ -36,6 +36,11 @@ jobs:
           mkdir _site
           cp -R src/. _site/
           cp LICENSE _site/
+          sed -i "s|<span id=\"version\">dev</span>|<span id=\"version\">$GITHUB_REF_NAME</span>|" _site/index.html
+          grep -q "<span id=\"version\">$GITHUB_REF_NAME</span>" _site/index.html || {
+            echo "::error file=src/index.html::Version placeholder <span id=\"version\">dev</span> not found."
+            exit 1
+          }
 
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0

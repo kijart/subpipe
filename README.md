@@ -53,6 +53,7 @@ Without Compose:
 
 ```sh
 docker build -t subpipe . # or: podman build -t subpipe .
+# optional: --build-arg VERSION=1.0.0 sets the version shown in the footer (default: none)
 docker run -d --rm -p 8080:8080 --read-only --tmpfs /tmp \
   --cap-drop ALL --security-opt no-new-privileges subpipe
 ```
@@ -92,12 +93,14 @@ git push --follow-tags
 
 Pushing the tag deploys that version to GitHub Pages, publishes its [container images](#container-images) and creates a [GitHub release](#github-releases).
 
+The tag is the only place the version lives. The footer of `src/index.html` holds the placeholder `<span id="version">dev</span>`, and the Pages and container workflows replace it with the tag when they publish, so there is no version number to bump by hand. Running the app from the repository shows `dev`; images built from `master` show the short commit SHA.
+
 ### GitHub Pages
 
 The [Deploy to GitHub Pages](.github/workflows/pages.yml) workflow runs on every `x.y.z` tag. It:
 
 1. fails if it is not run from a version tag;
-2. publishes only the app files (`src/` and `LICENSE`, no `README.md` or Docker files);
+2. publishes only the app files (`src/` and `LICENSE`, no `README.md` or Docker files), with the tag as the version shown in the footer;
 3. deploys with the official Pages actions, pinned to commit SHAs and with the minimum permissions needed.
 
 To redeploy an existing version, run the workflow manually (**Actions → Deploy to GitHub Pages → Run workflow**) and choose the version tag in **Use workflow from**. Runs from a branch are rejected.
@@ -137,7 +140,7 @@ Every tag is a multi-architecture image, so Docker and Podman pull the right var
 
 On every run, the workflow:
 
-1. builds the image and runs a smoke test (the container starts with the same restrictions Compose uses, passes its health check and serves the app) before pushing anything;
+1. builds the image and runs a smoke test (the container starts with the same restrictions Compose uses, passes its health check and serves the app with the right version in the footer) before pushing anything;
 2. pushes every platform with OCI labels and annotations (source, version, revision, license), an SBOM and a build provenance attestation, using actions pinned to commit SHAs.
 
 One-time setup in the repository:
