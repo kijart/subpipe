@@ -81,7 +81,7 @@ git tag -a 1.0.0 -m "1.0.0"
 git push --follow-tags
 ```
 
-Pushing the tag deploys that version to GitHub Pages and publishes its [container images](#container-images).
+Pushing the tag deploys that version to GitHub Pages, publishes its [container images](#container-images) and creates a [GitHub release](#github-releases).
 
 ### GitHub Pages
 
@@ -137,6 +137,10 @@ One-time setup in the repository:
 2. **Settings → Secrets and variables → Actions:** add the variable `DOCKERHUB_USERNAME` (your Docker Hub user, on the **Variables** tab) and the secret `DOCKERHUB_TOKEN` (the token, on the **Secrets** tab).
 3. After the first run, open the package on GitHub (**Packages → subpipe → Package settings**) and change its visibility to **Public**, so the image can be pulled without logging in. GHCR uses the workflow's `GITHUB_TOKEN`, so it needs no secret.
 
+### GitHub releases
+
+The [Create GitHub release](.github/workflows/release.yml) workflow runs on every `x.y.z` tag and creates a release named after the tag, with notes generated from the changes since the previous version. If the release already exists, it does nothing, so re-pushing a tag is safe. It needs no setup.
+
 ## Search servers
 
 Channel search and avatars use public Invidious / Piped instances, tried in order. You can edit the list in the app under **Search servers (Invidious / Piped)**: one URL per line. Hosts containing `piped` use the Piped API; the rest use the Invidious API.
@@ -172,18 +176,29 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
 
 ## Project structure
 
-```
-src/
-  index.html            Page markup and Content Security Policy
-  css/styles.css        Styles
-  js/core.js            NewPipe export parsing and writing, YouTube URL normalization,
-                        duplicate detection, merge and sort (no DOM)
-  js/channels.js        Invidious / Piped client: channel search and lookup, server
-                        fallback, response normalization (no DOM)
-  js/theme.js           Light / dark / auto theme toggle, applied before first paint
-  js/app.js             UI: rendering, file open/merge/export, search, avatars, toasts
-                        and localStorage persistence
-  img/favicon.svg       Icon
+```text
+.
+├── src/                   # The app, published as is (site root)
+│   ├── index.html         # Page markup and Content Security Policy
+│   ├── css/
+│   │   └── styles.css     # Styles by Atomic Design level (light/dark themes)
+│   ├── js/
+│   │   ├── core.js        # NewPipe export parsing and writing, YouTube URL normalization,
+│   │   │                  # duplicate detection, merge and sort (no DOM)
+│   │   ├── channels.js    # Invidious / Piped client: search, lookup, server fallback (no DOM)
+│   │   ├── theme.js       # Light / dark / auto theme toggle, applied before first paint
+│   │   └── app.js         # UI: rendering, file open/merge/export, search, avatars, toasts
+│   │                      # and localStorage persistence
+│   └── img/
+│       └── favicon.svg    # Icon
+├── LICENSE                # MIT license (also published to GitHub Pages)
+├── Dockerfile             # Container image (Docker/Podman)
+├── compose.yaml           # Runs the container with Compose
+└── .github/
+    └── workflows/
+        ├── pages.yml          # Deploys version tags to GitHub Pages
+        ├── publish-image.yml  # Publishes container images to GHCR and Docker Hub
+        └── release.yml        # Creates a GitHub release for each version tag
 ```
 
 ## License
