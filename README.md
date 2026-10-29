@@ -195,6 +195,7 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
 ├── Dockerfile             # Container image (Docker/Podman)
 ├── compose.yaml           # Runs the container with Compose
 └── .github/
+    ├── dependabot.yml     # Weekly updates for actions and the base image
     └── workflows/
         ├── pages.yml          # Deploys version tags to GitHub Pages
         ├── publish-image.yml  # Publishes container images to GHCR and Docker Hub
