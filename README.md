@@ -25,14 +25,14 @@ Load a NewPipe subscriptions export, edit it — add, rename, remove, merge, sor
 
 ## Running locally
 
-SubPipe is a static site. Open `index.html` directly, or serve the folder with any static server:
+SubPipe is a static site; everything it serves lives in `src/`. Open `src/index.html` directly, or serve that folder with any static server:
 
 ```sh
-python3 -m http.server 8000
+python3 -m http.server 8000 --directory src
 # then open http://localhost:8000
 ```
 
-It can also be hosted as-is on GitHub Pages or any static host.
+To host it, publish the contents of `src/` on GitHub Pages or any static host.
 
 ## Search servers
 
@@ -70,16 +70,17 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
 ## Project structure
 
 ```
-index.html              Page markup and Content Security Policy
-css/styles.css          Styles
-js/core.js              NewPipe export parsing and writing, YouTube URL normalization,
+src/
+  index.html            Page markup and Content Security Policy
+  css/styles.css        Styles
+  js/core.js            NewPipe export parsing and writing, YouTube URL normalization,
                         duplicate detection, merge and sort (no DOM)
-js/channels.js          Invidious / Piped client: channel search and lookup, server
+  js/channels.js        Invidious / Piped client: channel search and lookup, server
                         fallback, response normalization (no DOM)
-js/theme.js             Light / dark / auto theme toggle, applied before first paint
-js/app.js               UI: rendering, file open/merge/export, search, avatars, toasts
+  js/theme.js           Light / dark / auto theme toggle, applied before first paint
+  js/app.js             UI: rendering, file open/merge/export, search, avatars, toasts
                         and localStorage persistence
-img/favicon.svg         Icon
+  img/favicon.svg       Icon
 ```
 
 ## License
