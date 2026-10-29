@@ -34,6 +34,22 @@ python3 -m http.server 8000 --directory src
 
 To host it, publish the contents of `src/` on GitHub Pages or any static host.
 
+## Docker
+
+The image serves `src/` with [nginx-unprivileged](https://hub.docker.com/r/nginxinc/nginx-unprivileged) on port 8080, as a non-root user.
+
+```sh
+docker compose up -d --build
+# then open http://localhost:8080
+```
+
+Without Compose:
+
+```sh
+docker build -t subpipe .
+docker run --rm -p 8080:8080 subpipe
+```
+
 ## Search servers
 
 Channel search and avatars use public Invidious / Piped instances, tried in order. You can edit the list in the app under **Search servers (Invidious / Piped)**: one URL per line. Hosts containing `piped` use the Piped API; the rest use the Invidious API.

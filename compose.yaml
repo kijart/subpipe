@@ -1,0 +1,10 @@
+services:
+  subpipe:
+    build: .
+    image: subpipe
+    ports:
+      - "8444:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
