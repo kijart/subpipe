@@ -60,7 +60,9 @@ docker run -d --rm -p 8080:8080 --read-only --tmpfs /tmp \
 The container only serves the static files; your subscriptions are still processed in your browser and never reach it. It also:
 
 - runs as a non-root user, with a read-only filesystem and no Linux capabilities (Compose sets this up for you);
-- has a built-in health check that requests the home page.
+- sends security headers (`X-Content-Type-Options`, `Referrer-Policy`, `Cross-Origin-Opener-Policy`, `Permissions-Policy`, and a CSP that blocks embedding the app in frames);
+- serves `index.html` with `Cache-Control: no-cache`, so a new version is picked up right away, and caches the other files for an hour;
+- exposes `/healthz` for the built-in health check.
 
 ## Deployment
 
@@ -194,6 +196,10 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
 ├── LICENSE                # MIT license (also published to GitHub Pages)
 ├── Dockerfile             # Container image (Docker/Podman)
 ├── compose.yaml           # Runs the container with Compose
+├── container/
+│   └── nginx/             # Mirrors /etc/nginx/ in the image
+│       ├── conf.d/default.conf             # Server: caching, health check
+│       └── snippets/security-headers.conf  # Headers shared by every location
 └── .github/
     ├── dependabot.yml     # Weekly updates for actions and the base image
     └── workflows/

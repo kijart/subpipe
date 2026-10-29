@@ -11,7 +11,9 @@ on:
     paths:
       - Dockerfile
       - .dockerignore
+      - container/**
       - src/**
+      - LICENSE
       - .github/workflows/publish-image.yml
 
 permissions:
@@ -60,11 +62,11 @@ jobs:
             --security-opt no-new-privileges "$IMAGE_NAME:test"
           trap 'docker logs smoke; docker rm -f smoke >/dev/null' EXIT
           for _ in $(seq 1 20); do
-            curl -fsS -o /dev/null http://127.0.0.1:8080/ && break
+            curl -fsS -o /dev/null http://127.0.0.1:8080/healthz && break
             sleep 1
           done
           # The same command the image's HEALTHCHECK runs (its first run waits for the interval).
-          docker exec smoke wget -q -O /dev/null http://127.0.0.1:8080/ || { echo "::error::Health check failed"; exit 1; }
+          docker exec smoke wget -q -O /dev/null http://127.0.0.1:8080/healthz || { echo "::error::Health check failed"; exit 1; }
           curl -fsS http://127.0.0.1:8080/ | grep -q '<title>SubPipe</title>' || { echo "::error::index.html not served"; exit 1; }
           curl -fsS -o /dev/null http://127.0.0.1:8080/js/app.js
 
