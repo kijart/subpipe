@@ -34,23 +34,37 @@ python3 -m http.server 8000 --directory src
 
 ## Docker
 
-The image serves `src/` with [nginx-unprivileged](https://hub.docker.com/r/nginxinc/nginx-unprivileged) on port 8080, as a non-root user.
+The repository includes a [`Dockerfile`](Dockerfile) and a [`compose.yaml`](compose.yaml) that serve `src/` with an unprivileged nginx on port 8080. With Compose:
 
 ```sh
-docker compose up -d --build
-# then open http://localhost:8080
+docker compose up -d --build # or: podman compose up -d --build
 ```
+
+Then open <http://localhost:8080>.
 
 Without Compose:
 
 ```sh
-docker build -t subpipe .
-docker run --rm -p 8080:8080 subpipe
+docker build -t subpipe . # or: podman build -t subpipe .
+docker run -d --rm -p 8080:8080 --read-only --tmpfs /tmp \
+  --cap-drop ALL --security-opt no-new-privileges subpipe
 ```
+
+To skip the build, use a prebuilt image from GitHub Container Registry or Docker Hub (see [Container images](#container-images) for the available tags):
+
+```sh
+docker run -d --rm -p 8080:8080 --read-only --tmpfs /tmp \
+  --cap-drop ALL --security-opt no-new-privileges ghcr.io/kijart/subpipe:latest
+```
+
+The container only serves the static files; your subscriptions are still processed in your browser and never reach it. It also:
+
+- runs as a non-root user, with a read-only filesystem and no Linux capabilities (Compose sets this up for you);
+- has a built-in health check that requests the home page.
 
 ## Deployment
 
-The app is deployed to GitHub Pages automatically when a version is released (see below). It can also be hosted on any static host (Netlify, Cloudflare Pages, …): upload the contents of `src/`.
+The app is deployed to GitHub Pages and published as a container image automatically when a version is released (see below). It can also be hosted on any static host (Netlify, Cloudflare Pages, …): upload the contents of `src/`.
 
 ### Versioning
 
@@ -67,7 +81,7 @@ git tag -a 1.0.0 -m "1.0.0"
 git push --follow-tags
 ```
 
-Pushing the tag deploys that version to GitHub Pages.
+Pushing the tag deploys that version to GitHub Pages and publishes its [container images](#container-images).
 
 ### GitHub Pages
 
@@ -85,6 +99,43 @@ One-time setup in the repository:
 2. **Settings → Environments → github-pages → Deployment branches and tags:** add a **tag** rule `*.*.*`. By default the environment only allows the default branch, so deployments from tags are rejected until this rule exists.
 
 The app will be available at `https://<user>.github.io/<repo>/`. All paths are relative, so it works from a subpath.
+
+### Container images
+
+The [Publish container image](.github/workflows/publish-image.yml) workflow builds the image and pushes it to two registries:
+
+- GitHub Container Registry: [`ghcr.io/kijart/subpipe`](https://github.com/kijart/subpipe/pkgs/container/subpipe)
+- Docker Hub: [`docker.io/kijart/subpipe`](https://hub.docker.com/r/kijart/subpipe)
+
+Both registries get the same tags:
+
+| Tag      | Example  | Published on           | Points to                                          |
+| -------- | -------- | ---------------------- | -------------------------------------------------- |
+| `latest` | `latest` | every push to `master` | the latest `master`, which may not be released yet |
+| `x.y.z`  | `1.1.0`  | every `x.y.z` tag      | that exact version; never changes                  |
+| `x.y`    | `1.1`    | every `x.y.z` tag      | the latest patch release of `x.y`                  |
+| `x`      | `1`      | every `x.y.z` tag      | the latest minor or patch release of `x`           |
+
+For a stable deployment, use `x.y.z` or `x`; `latest` follows development. Pushes to `master` that only change files outside the image (README, other workflows) do not publish a new `latest`.
+
+Every tag is a multi-architecture image, so Docker and Podman pull the right variant automatically:
+
+| Platform       | Typical hardware                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| `linux/amd64`  | Most PCs and servers (Intel, AMD)                                                                 |
+| `linux/arm64`  | Apple Silicon (through Docker Desktop or Podman), Raspberry Pi 4/5 with a 64-bit OS, AWS Graviton |
+| `linux/arm/v7` | Raspberry Pi 2/3/4 with a 32-bit OS                                                               |
+
+On every run, the workflow:
+
+1. builds the image and runs a smoke test (the container starts with the same restrictions Compose uses, passes its health check and serves the app) before pushing anything;
+2. pushes every platform with OCI labels and annotations (source, version, revision, license), an SBOM and a build provenance attestation, using actions pinned to commit SHAs.
+
+One-time setup in the repository:
+
+1. Create a Docker Hub [access token](https://docs.docker.com/security/for-developers/access-tokens/) with **Read & Write** permission.
+2. **Settings → Secrets and variables → Actions:** add the variable `DOCKERHUB_USERNAME` (your Docker Hub user, on the **Variables** tab) and the secret `DOCKERHUB_TOKEN` (the token, on the **Secrets** tab).
+3. After the first run, open the package on GitHub (**Packages → subpipe → Package settings**) and change its visibility to **Public**, so the image can be pulled without logging in. GHCR uses the workflow's `GITHUB_TOKEN`, so it needs no secret.
 
 ## Search servers
 
