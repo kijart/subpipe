@@ -32,8 +32,6 @@ python3 -m http.server 8000 --directory src
 # then open http://localhost:8000
 ```
 
-To host it, publish the contents of `src/` on GitHub Pages or any static host.
-
 ## Docker
 
 The image serves `src/` with [nginx-unprivileged](https://hub.docker.com/r/nginxinc/nginx-unprivileged) on port 8080, as a non-root user.
@@ -49,6 +47,44 @@ Without Compose:
 docker build -t subpipe .
 docker run --rm -p 8080:8080 subpipe
 ```
+
+## Deployment
+
+The app is deployed to GitHub Pages automatically when a version is released (see below). It can also be hosted on any static host (Netlify, Cloudflare Pages, …): upload the contents of `src/`.
+
+### Versioning
+
+The app follows [Semantic Versioning](https://semver.org/). Versions are git tags in the form `x.y.z`:
+
+- **MAJOR**: incompatible changes, e.g. data saved in the browser (list, servers, theme) can no longer be read.
+- **MINOR**: new features that keep compatibility.
+- **PATCH**: bug fixes and small adjustments.
+
+To release a version, tag the commit and push the tag:
+
+```sh
+git tag -a 1.0.0 -m "1.0.0"
+git push --follow-tags
+```
+
+Pushing the tag deploys that version to GitHub Pages.
+
+### GitHub Pages
+
+The [Deploy to GitHub Pages](.github/workflows/pages.yml) workflow runs on every `x.y.z` tag. It:
+
+1. fails if it is not run from a version tag;
+2. publishes only the app files (`src/` and `LICENSE`, no `README.md` or Docker files);
+3. deploys with the official Pages actions, pinned to commit SHAs and with the minimum permissions needed.
+
+To redeploy an existing version, run the workflow manually (**Actions → Deploy to GitHub Pages → Run workflow**) and choose the version tag in **Use workflow from**. Runs from a branch are rejected.
+
+One-time setup in the repository:
+
+1. **Settings → Pages → Build and deployment → Source:** select **GitHub Actions**.
+2. **Settings → Environments → github-pages → Deployment branches and tags:** add a **tag** rule `*.*.*`. By default the environment only allows the default branch, so deployments from tags are rejected until this rule exists.
+
+The app will be available at `https://<user>.github.io/<repo>/`. All paths are relative, so it works from a subpath.
 
 ## Search servers
 
