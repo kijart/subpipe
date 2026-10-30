@@ -64,8 +64,11 @@ python3 -m http.server 8000 --directory src
 The repository includes a [`Dockerfile`](Dockerfile) and a [`compose.yaml`](compose.yaml) that serve `src/` with an unprivileged nginx on port 8080. With Compose:
 
 ```sh
-docker compose up -d --build # or: podman compose up -d --build
+docker compose up -d --build # build from source; or: podman compose up -d --build
+docker compose up -d          # or: pull the published image from Docker Hub
 ```
+
+The service sets both `build` and `image: docker.io/kijart/subpipe:latest`: without `--build` Compose pulls the image if it isn't present locally, and with `--build` it builds from source and tags the result with that same name. Run `docker compose pull` to update to the latest published version.
 
 Then open <http://localhost:8080>.
 
