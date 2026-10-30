@@ -1,11 +1,11 @@
 # SubPipe <!-- omit in toc -->
 
-[![GitHub Container Registry](https://img.shields.io/badge/ghcr-images-success.svg?logo=GitHub)](https://github.com/users/kijart/packages/container/package/subpiped)
-[![Docker Hub](https://img.shields.io/badge/dockerhub-images-success.svg?logo=Docker)](https://hub.docker.com/r/kijart/subpiped)
-[![Deploy to GitHub Pages](https://github.com/kijart/subpiped/actions/workflows/pages.yml/badge.svg)](https://github.com/kijart/subpiped/actions/workflows/pages.yml)
-[![Publish container image](https://github.com/kijart/subpiped/actions/workflows/publish-image.yml/badge.svg)](https://github.com/kijart/subpiped/actions/workflows/publish-image.yml)
-[![Dependabot Updates](https://github.com/kijart/subpiped/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/kijart/subpiped/actions/workflows/dependabot/dependabot-updates)
-[![License: MIT](https://img.shields.io/github/license/kijart/subpiped)](LICENSE)
+[![GitHub Container Registry](https://img.shields.io/badge/ghcr-images-success.svg?logo=GitHub)](https://github.com/users/kijart/packages/container/package/subpipe)
+[![Docker Hub](https://img.shields.io/badge/dockerhub-images-success.svg?logo=Docker)](https://hub.docker.com/r/kijart/subpipe)
+[![Deploy to GitHub Pages](https://github.com/kijart/subpipe/actions/workflows/pages.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/pages.yml)
+[![Publish container image](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml)
+[![Dependabot Updates](https://github.com/kijart/subpipe/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/dependabot/dependabot-updates)
+[![License: MIT](https://img.shields.io/github/license/kijart/subpipe)](LICENSE)
 
 A small, browser-only subscription manager for [NewPipe](https://newpipe.net/).
 
