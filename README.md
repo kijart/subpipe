@@ -1,4 +1,4 @@
-# SubPipe
+# SubPipe <!-- omit in toc -->
 
 [![GitHub Container Registry](https://img.shields.io/badge/ghcr-images-success.svg?logo=GitHub)](https://github.com/users/kijart/packages/container/package/subpiped)
 [![Docker Hub](https://img.shields.io/badge/dockerhub-images-success.svg?logo=Docker)](https://hub.docker.com/r/kijart/subpiped)
@@ -10,6 +10,25 @@
 A small, browser-only subscription manager for [NewPipe](https://newpipe.net/).
 
 Load a NewPipe subscriptions export, edit it — add, rename, remove, merge, sort — and download a file NewPipe can import again. No backend, no build step, no dependencies.
+
+## Contents <!-- omit in toc -->
+
+- [Features](#features)
+- [Usage](#usage)
+- [Running locally](#running-locally)
+- [Docker](#docker)
+- [Deployment](#deployment)
+  - [Versioning](#versioning)
+  - [Tagging workflow setup](#tagging-workflow-setup)
+  - [GitHub Pages](#github-pages)
+  - [Container images](#container-images)
+  - [GitHub releases](#github-releases)
+- [Search servers](#search-servers)
+- [Privacy](#privacy)
+- [Export format](#export-format)
+- [Project structure](#project-structure)
+- [License](#license)
+- [Disclaimer](#disclaimer)
 
 ## Features
 
