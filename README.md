@@ -2,6 +2,7 @@
 
 [![GitHub Container Registry](https://img.shields.io/badge/ghcr-images-success.svg?logo=GitHub)](https://github.com/users/kijart/packages/container/package/subpipe)
 [![Docker Hub](https://img.shields.io/badge/dockerhub-images-success.svg?logo=Docker)](https://hub.docker.com/r/kijart/subpipe)
+[![Tag new version](https://github.com/kijart/subpipe/actions/workflows/tag-version.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/tag-version.yml)
 [![Deploy to GitHub Pages](https://github.com/kijart/subpipe/actions/workflows/pages.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/pages.yml)
 [![Publish container image](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml)
 [![Dependabot Updates](https://github.com/kijart/subpipe/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/dependabot/dependabot-updates)
