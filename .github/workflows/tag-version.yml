@@ -1,0 +1,79 @@
+name: Tag new version
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Version part to increase
+        type: choice
+        options: [major, minor, patch]
+        default: minor
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check branch
+        run: |
+          if [ "$GITHUB_REF" != refs/heads/master ]; then
+            echo "::error::Run this workflow from master, not from '$GITHUB_REF_NAME'."
+            exit 1
+          fi
+
+      - name: Create app token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+
+      - name: Compute next version
+        id: version
+        env:
+          BUMP: ${{ inputs.bump }}
+        run: |
+          if git tag --points-at HEAD | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Commit $GITHUB_SHA is already tagged as $(git tag --points-at HEAD | head -n 1)."
+            exit 1
+          fi
+          latest=$(git tag --list --sort=-v:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1 || true)
+          IFS=. read -r major minor patch <<< "${latest:-0.0.0}"
+          case "$BUMP" in
+            major) version="$((major + 1)).0.0" ;;
+            minor) version="$major.$((minor + 1)).0" ;;
+            patch) version="$major.$minor.$((patch + 1))" ;;
+            *) echo "::error::Unknown bump '$BUMP'."; exit 1 ;;
+          esac
+          echo "Next version: $version (previous: ${latest:-none})"
+          echo "previous=${latest:-none}" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          VERSION: ${{ steps.version.outputs.version }}
+          PREVIOUS: ${{ steps.version.outputs.previous }}
+        run: |
+          bot_id=$(gh api "/users/${APP_SLUG}[bot]" --jq .id)
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${bot_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          git tag -a "$VERSION" -m "$VERSION"
+          git push origin "refs/tags/$VERSION"
+          echo "Tagged **$VERSION** (previous: $PREVIOUS) on \`${GITHUB_SHA::7}\`." >> "$GITHUB_STEP_SUMMARY"

@@ -84,7 +84,9 @@ The app follows [Semantic Versioning](https://semver.org/). Versions are git tag
 - **MINOR**: new features that keep compatibility.
 - **PATCH**: bug fixes and small adjustments.
 
-To release a version, tag the commit and push the tag:
+To release a version, run the [Tag new version](.github/workflows/tag-version.yml) workflow (**Actions → Tag new version → Run workflow**) from `master` and choose the part to increase: `major`, `minor` (default) or `patch`. It takes the highest `x.y.z` tag, increases it (`1.4.2` becomes `2.0.0`, `1.5.0` or `1.4.3`) and pushes the new tag on the latest `master` commit. It fails if that commit already has a version tag.
+
+You can also tag a commit by hand:
 
 ```sh
 git tag -a 1.0.0 -m "1.0.0"
@@ -94,6 +96,17 @@ git push --follow-tags
 Pushing the tag deploys that version to GitHub Pages, publishes its [container images](#container-images) and creates a [GitHub release](#github-releases).
 
 The tag is the only place the version lives. The footer of `src/index.html` holds the placeholder `<span id="version">dev</span>`, and the Pages and container workflows replace it with the tag when they publish, so there is no version number to bump by hand. Running the app from the repository shows `dev`; images built from `master` show the short commit SHA.
+
+### Tagging workflow setup
+
+Tags pushed with the workflow's own `GITHUB_TOKEN` do not trigger other workflows, so [Tag new version](.github/workflows/tag-version.yml) pushes the tag with a short-lived token from a GitHub App. One-time setup:
+
+1. **Settings (your account) → Developer settings → GitHub Apps → New GitHub App:** give it a name (e.g. `subpipe-release`) and the repository URL as homepage, uncheck **Webhook → Active**, set **Repository permissions → Contents** to **Read and write**, and choose **Only on this account**.
+2. On the app's page, **Private keys → Generate a private key** (downloads a `.pem` file).
+3. **Install App** → your account → **Only select repositories** → this repository.
+4. In this repository, **Settings → Secrets and variables → Actions:** add the variable `RELEASE_APP_CLIENT_ID` (the app's **Client ID**, on the **Variables** tab) and the secret `RELEASE_APP_PRIVATE_KEY` (the whole contents of the `.pem` file, on the **Secrets** tab). Then delete the local `.pem` file.
+
+The tag is pushed by `<app-name>[bot]`. Only users with write access to the repository can run the workflow.
 
 ### GitHub Pages
 
@@ -215,7 +228,8 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
     └── workflows/
         ├── pages.yml          # Deploys version tags to GitHub Pages
         ├── publish-image.yml  # Publishes container images to GHCR and Docker Hub
-        └── release.yml        # Creates a GitHub release for each version tag
+        ├── release.yml        # Creates a GitHub release for each version tag
+        └── tag-version.yml    # Pushes the next major / minor / patch version tag
 ```
 
 ## License
