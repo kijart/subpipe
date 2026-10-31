@@ -28,6 +28,7 @@ Load a NewPipe subscriptions export, edit it — add, rename, remove, merge, sor
 - [Privacy](#privacy)
 - [Export format](#export-format)
 - [Project structure](#project-structure)
+- [AI assistance](#ai-assistance)
 - [License](#license)
 - [Disclaimer](#disclaimer)
 
@@ -254,6 +255,10 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
         ├── release.yml        # Creates a GitHub release for each version tag
         └── tag-version.yml    # Pushes the next major / minor / patch version tag
 ```
+
+## AI assistance
+
+This project was developed with the help of AI coding assistants, used to generate and refactor code. All code has been manually reviewed and tested; the design, decisions and responsibility remain with the author.
 
 ## License
 
