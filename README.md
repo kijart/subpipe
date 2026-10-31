@@ -2,6 +2,7 @@
 
 [![GitHub Container Registry](https://img.shields.io/badge/ghcr-images-success.svg?logo=GitHub)](https://github.com/users/kijart/packages/container/package/subpipe)
 [![Docker Hub](https://img.shields.io/badge/dockerhub-images-success.svg?logo=Docker)](https://hub.docker.com/r/kijart/subpipe)
+[![Test](https://github.com/kijart/subpipe/actions/workflows/test.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/test.yml)
 [![Tag new version](https://github.com/kijart/subpipe/actions/workflows/tag-version.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/tag-version.yml)
 [![Deploy to GitHub Pages](https://github.com/kijart/subpipe/actions/workflows/pages.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/pages.yml)
 [![Publish container image](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml)
@@ -17,6 +18,7 @@ Load a NewPipe subscriptions export, edit it — add, rename, remove, merge, sor
 - [Features](#features)
 - [Usage](#usage)
 - [Running locally](#running-locally)
+- [Tests](#tests)
 - [Docker](#docker)
 - [Deployment](#deployment)
   - [Versioning](#versioning)
@@ -59,6 +61,23 @@ SubPipe is a static site; everything it serves lives in `src/`. Open `src/index.
 python3 -m http.server 8000 --directory src
 # then open http://localhost:8000
 ```
+
+## Tests
+
+Unit tests live in `test/` and use Node.js's built-in [test runner](https://nodejs.org/api/test.html), so there is nothing to install. With Node.js 22 or later:
+
+```sh
+node --test "test/*.test.js"
+```
+
+They cover the modules without DOM code:
+
+- `test/core.test.js`: `core.js` — YouTube URL normalization, reading and writing NewPipe exports, duplicate detection, merge, sort and the export file name.
+- `test/channels.test.js`: `channels.js` — mapping Invidious / Piped responses, avatar URLs, and the client's server fallback. `fetch` is mocked, so no network is used.
+
+The UI (`app.js`, `theme.js`) is not covered by automated tests.
+
+The [Test](.github/workflows/test.yml) workflow runs them on every push to `master` and on every pull request. The tests are not part of the published site or container image.
 
 ## Docker
 
@@ -240,6 +259,7 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
 │   │                      # and localStorage persistence
 │   └── img/
 │       └── favicon.svg    # Icon
+├── test/                  # Unit tests for core.js and channels.js (node --test)
 ├── LICENSE                # MIT license (also published to GitHub Pages)
 ├── Dockerfile             # Container image (Docker/Podman)
 ├── compose.yaml           # Runs the container with Compose
@@ -253,7 +273,8 @@ Subscriptions from other NewPipe services (SoundCloud, PeerTube, etc.) are kept 
         ├── pages.yml          # Deploys version tags to GitHub Pages
         ├── publish-image.yml  # Publishes container images to GHCR and Docker Hub
         ├── release.yml        # Creates a GitHub release for each version tag
-        └── tag-version.yml    # Pushes the next major / minor / patch version tag
+        ├── tag-version.yml    # Pushes the next major / minor / patch version tag
+        └── test.yml           # Runs the unit tests on pushes to master and pull requests
 ```
 
 ## AI assistance
