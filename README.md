@@ -7,6 +7,7 @@
 [![Dependabot Updates](https://github.com/kijart/subpipe/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/dependabot/dependabot-updates)
 [![Test](https://github.com/kijart/subpipe/actions/workflows/test.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/test.yml)
 [![Tag new version](https://github.com/kijart/subpipe/actions/workflows/tag-version.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/tag-version.yml)
+[![Create GitHub release](https://github.com/kijart/subpipe/actions/workflows/release.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/release.yml)
 [![Deploy to GitHub Pages](https://github.com/kijart/subpipe/actions/workflows/pages.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/pages.yml)
 [![Publish container image](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml/badge.svg)](https://github.com/kijart/subpipe/actions/workflows/publish-image.yml)
 
